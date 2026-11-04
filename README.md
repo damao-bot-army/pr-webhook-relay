@@ -5,7 +5,7 @@
 ![Cloudflare Workers](https://img.shields.io/badge/runs%20on-Cloudflare%20Workers-F38020)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<!-- banner -->
+![pr-webhook-relay](docs/images/banner.jpg)
 
 A Cloudflare Worker that receives organization-level GitHub `pull_request` webhooks and checks their `X-Hub-Signature-256` HMAC. It forwards `opened`, `synchronize`, `reopened` and `ready_for_review` events as a short JSON summary to a routine webhook.
 
