@@ -7,17 +7,34 @@
 
 ![pr-webhook-relay](docs/images/banner.jpg)
 
-A Cloudflare Worker that receives organization-level GitHub `pull_request` webhooks and checks their `X-Hub-Signature-256` HMAC. It forwards `opened`, `synchronize`, `reopened` and `ready_for_review` events as a short JSON summary to a routine webhook.
+A Cloudflare Worker that receives organization-level GitHub `pull_request` webhooks and checks their `X-Hub-Signature-256` HMAC. It forwards `opened`, `synchronize`, `reopened` and `ready_for_review` events as a short JSON summary to a routine webhook (for example a Grok Bot routine).
 
-## Status
+Status: early (0.1.0), no releases; deploy from source. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
-This project is for GitHub organizations that want new or updated pull requests to trigger a routine, such as a review bot.
+## Quick start
 
-- **Maturity:** early, version 0.1.0.
-- **Requirements:** a Cloudflare account with Workers; admin access to a GitHub organization to add the webhook; a routine webhook URL and its bearer key; Node.js 22.12+ and npm.
-- **Releases:** none, and none planned. Deploy from source with the steps below.
+Requirements: a Cloudflare account with Workers; admin access to a GitHub organization to add the webhook; a routine webhook URL and its bearer key; Node.js 22.12+ and npm.
 
-For bug reports and development checks, see [CONTRIBUTING.md](CONTRIBUTING.md). Report security issues privately as described in [SECURITY.md](SECURITY.md).
+1. Deploy:
+
+   ```sh
+   npm ci
+   npx wrangler deploy
+   ```
+
+2. Set the three secrets (you will be prompted for each value):
+
+   ```sh
+   npx wrangler secret put GITHUB_WEBHOOK_SECRET
+   npx wrangler secret put ROUTINE_WEBHOOK_URL
+   npx wrangler secret put ROUTINE_KEY
+   ```
+
+3. In GitHub, open the organization **Settings → Webhooks → Add webhook**:
+   - **Payload URL**: the Worker URL printed by `wrangler deploy`, for example `https://<worker>.<subdomain>.workers.dev`
+   - **Content type**: `application/json`
+   - **Secret**: the same value as `GITHUB_WEBHOOK_SECRET`
+   - **Which events would you like to trigger this webhook?**: "Let me select individual events" → check only **Pull requests**
 
 ## What it does
 
@@ -44,29 +61,6 @@ For every `POST` request the Worker:
 5. Returns `200` if the routine accepted it, or `502` if it failed or could not be reached.
 
 Other methods get `405`. The Worker stores nothing. Logs contain only the delivery ID and the downstream status code, not the routine URL or key.
-
-## Quick start
-
-1. Deploy:
-
-   ```sh
-   npm ci
-   npx wrangler deploy
-   ```
-
-2. Set the three secrets (you will be prompted for each value):
-
-   ```sh
-   npx wrangler secret put GITHUB_WEBHOOK_SECRET
-   npx wrangler secret put ROUTINE_WEBHOOK_URL
-   npx wrangler secret put ROUTINE_KEY
-   ```
-
-3. In GitHub, open the organization **Settings → Webhooks → Add webhook**:
-   - **Payload URL**: the Worker URL printed by `wrangler deploy`, for example `https://<worker>.<subdomain>.workers.dev`
-   - **Content type**: `application/json`
-   - **Secret**: the same value as `GITHUB_WEBHOOK_SECRET`
-   - **Which events would you like to trigger this webhook?**: "Let me select individual events" → check only **Pull requests**
 
 ## Uninstall
 

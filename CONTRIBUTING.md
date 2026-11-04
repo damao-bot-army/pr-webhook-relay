@@ -10,7 +10,7 @@ Report security issues privately using [SECURITY.md](SECURITY.md), not a public 
 
 ## Development
 
-Use Node.js 22.12+ and npm. Install [gitleaks](https://github.com/gitleaks/gitleaks) 8.x and make sure `gitleaks` is in your `PATH`. `npm ci` sets `core.hooksPath` to `.githooks`, and the pre-commit hook blocks commits when gitleaks is missing.
+Use Node.js 22.12+ and npm. Install [gitleaks](https://github.com/gitleaks/gitleaks) 8.19.1 or newer and make sure `gitleaks` is in your `PATH`. `npm ci` sets `core.hooksPath` to `.githooks`, and the pre-commit hook blocks commits when gitleaks is missing.
 
 Before opening a pull request, run the same checks as CI:
 
